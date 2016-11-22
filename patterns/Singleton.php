@@ -62,16 +62,14 @@ echo "<xmp>";
 $obj1 = Singleton::getInstance();
 $obj1->setProperty('value1');
 echo $obj1 . PHP_EOL;
-// object1
-echo "===" . PHP_EOL;
+// value1
 
 $obj2 = Singleton::getInstance();
 $obj2->setProperty('value2');
 echo $obj1 . PHP_EOL;
 echo $obj2 . PHP_EOL;
-// object2
-// object2
-echo "===" . PHP_EOL;
+// value2
+// value2
 
 // проверяем экземпляр родительского класса
 $obj3 = SingletonChild::getInstance();
@@ -79,14 +77,14 @@ $obj3->setProperty('value3');
 echo $obj1 . PHP_EOL;
 echo $obj2 . PHP_EOL;
 echo $obj3 . PHP_EOL;
-// object3
-// object3
-// object3
-echo "===" . PHP_EOL;
+// value3
+// value3
+// value3
+
 // проверяем __clone()
 // FATAL ERROR Uncaught Error: Call to protected Singleton::__clone() from context ''
 //$obj4 = clone $obj1;
-//$obj4->setProperty('object4');
+//$obj4->setProperty('value4');
 //echo $obj4 . PHP_EOL;
 
 // проверяем __wakeup()
