@@ -1,0 +1,16 @@
+{
+  "name": "taita",
+  "authors": [
+    {
+      "name": "Yury Suhno",
+      "email": "yury.suhno@gmail.com"
+    }
+  ],
+  "config":{
+    "vendor-dir": "../vendor",
+    "bin-dir": "../bin"
+  },
+  "require": {
+    "php-amqplib/php-amqplib": "2.6.*"
+  }
+}
