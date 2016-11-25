@@ -65,3 +65,4 @@ print_r($firstProduct->name);
 // The first product
 print_r($secondProduct->name);
 // Second product
+
