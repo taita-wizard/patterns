@@ -7,15 +7,23 @@
  * Time: 13:44
  */
 include_once __DIR__."/db.php";
-$countriesArray = [];
+include_once __DIR__."/func.php";
+$countriesArray = $errors = [];
 foreach( DB::query("SELECT * FROM country") as $row) {
     $countriesArray[$row['id']] = $row['name'];
 }
 echo("<xmp>");print_r($_POST);echo("</xmp>");
-if(isset($_POST))
+if(!empty($_POST))
 {
+    $fio = filterFio($_POST['fio']);
+    $phone = filterPhone($_POST['phone']);
+    $country = filterCountry($_POST['country']);
 
+    echo("<xmp>");print_r($fio);echo("</xmp>");
+    echo("<xmp>");var_dump($phone);echo("</xmp>");
+    echo("<xmp>");var_dump($phone);echo("</xmp>");die;
 }
+
 ?>
 <!DOCTYPE HTML>
 
@@ -25,8 +33,10 @@ if(isset($_POST))
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Приложение</title>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
-          integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
             integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
             crossorigin="anonymous"></script>
@@ -47,15 +57,16 @@ if(isset($_POST))
                 <form method="POST" action="index.php">
                     <div class="form-group">
                         <label for="fio">ФИО</label>
-                        <input type="text" class="form-control" id="fio" placeholder="Введите ФИО">
+                        <input type="text" class="form-control" id="fio" placeholder="Введите ФИО" name="fio"
+                        value="<?php isset($fio) ? $fio : ''?>">
                     </div>
                     <div class="form-group">
                         <label for="phone">Телефон</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Ввведите телефон в формате +x-(xxx)-xxx-xx-xx">
+                        <input type="text" class="form-control" id="phone" placeholder="Ввведите телефон в формате +x-(xxx)-xxx-xx-xx" name="phone">
                     </div>
                     <div class="form-group">
                         <label for="country">Страна</label>
-                        <select class="form-control" id="country">
+                        <select class="form-control" id="country" name="country">
                         <?php foreach($countriesArray as $id => $name) { ?>
                             <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
                             <?php } ?>
