@@ -21,7 +21,12 @@ if(!empty($_POST))
 
     echo("<xmp>");print_r($fio);echo("</xmp>");
     echo("<xmp>");var_dump($phone);echo("</xmp>");
-    echo("<xmp>");var_dump($phone);echo("</xmp>");die;
+    echo("<xmp>");var_dump($country);echo("</xmp>");die;
+
+    if($fio !== false && $phone !== false && $country !== false)
+    {
+        $res = DB::query("INSERT INTO `user` SET ()");
+    }
 }
 
 ?>
