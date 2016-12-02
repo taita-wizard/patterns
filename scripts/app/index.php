@@ -1,124 +1,56 @@
 <?php
-//header('Content-Type: text/html; charset=utf-8');
+header('Content-Type: text/html; charset=utf-8');
 /**
  * Created by PhpStorm.
  * User: yury
  * Date: 01.12.2016
  * Time: 13:44
  */
-include_once __DIR__."/db.php";
-include_once __DIR__."/func.php";
-$countriesArray = $errors = [];
-foreach( DB::query("SELECT * FROM country") as $row) {
+include_once __DIR__ . "/db.php";
+include_once __DIR__ . "/func.php";
+$countriesArray = $users = [];
+foreach (DB::query("SELECT * FROM country") as $row)
     $countriesArray[$row['id']] = $row['name'];
+
+foreach (DB::query("SELECT * FROM user") as $row)
+    $users[$row['id']] = $row;
+
+$search = false;
+if (isset($_GET['search'])) {
+    $search = filterSearch($_GET['search']);
+    $users = [];
+    if ($search)
+        foreach (DB::query("SELECT * FROM user WHERE `fio` LIKE '%{$search}%'") as $row)
+            $users[$row['id']] = $row;
+
 }
-echo("<xmp>");print_r($_POST);echo("</xmp>");
-if(!empty($_POST))
-{
+$sort = 1;
+if (isset($_GET['sort'])) {
+    $sort = intval($_GET['sort']);
+    if ($sort === 1)
+        usort($users, 'cmpAsc');
+     elseif ($sort === 0)
+        usort($users, 'cmpDesc');
+}
+
+if (!empty($_POST)) {
     $fio = filterFio($_POST['fio']);
     $phone = filterPhone($_POST['phone']);
     $country = filterCountry($_POST['country']);
 
-    echo("<xmp>");print_r($fio);echo("</xmp>");
-    echo("<xmp>");var_dump($phone);echo("</xmp>");
-    echo("<xmp>");var_dump($country);echo("</xmp>");die;
+    if ($fio !== false && $phone !== false && $country !== false) {
+        if (isset($_GET['edit']))
+            DB::query("UPDATE `user` SET fio = '{$fio}', phone='{$phone}', country_id=$country WHERE id=" . intval($_GET['edit']) . " LIMIT 1");
+        else
+            DB::query("INSERT INTO `user` (fio, phone, country_id) VALUES ('{$fio}', '{$phone}', $country)");
 
-    if($fio !== false && $phone !== false && $country !== false)
-    {
-        $res = DB::query("INSERT INTO `user` SET ()");
+        header("Location: " . $_SERVER["REQUEST_URI"]);
     }
 }
+if (isset($_GET['edit'])) {
+    $id = intval($_GET['edit']);
+    foreach (DB::query("SELECT * FROM user WHERE id={$id}") as $row)
+        $user = $row;
+}
+include __DIR__."/layout.php";
 
-?>
-<!DOCTYPE HTML>
-
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Приложение</title>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
-    integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
-            integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
-            crossorigin="anonymous"></script>
-</head>
-
-<body>
-
-<header>
-    <nav class="navbar navbar-light bg-faded">
-        <a class="navbar-brand" href="#">ФГУП «Электронные торги и безопасность»</a>
-    </nav>
-</header>
-<br />
-<div class="container-fluid">
-    <section>
-        <div class="row">
-            <div class="col-sm-3">
-                <form method="POST" action="index.php">
-                    <div class="form-group">
-                        <label for="fio">ФИО</label>
-                        <input type="text" class="form-control" id="fio" placeholder="Введите ФИО" name="fio"
-                        value="<?php isset($fio) ? $fio : ''?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Телефон</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Ввведите телефон в формате +x-(xxx)-xxx-xx-xx" name="phone">
-                    </div>
-                    <div class="form-group">
-                        <label for="country">Страна</label>
-                        <select class="form-control" id="country" name="country">
-                        <?php foreach($countriesArray as $id => $name) { ?>
-                            <option value="<?php echo $id; ?>"><?php echo $name; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Добавить</button>
-                </form>
-            </div>
-            <div class="col-sm-9">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>ФИО</th>
-                        <th>Телефон</th>
-                        <th>Страна</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-    </section>
-
-    <footer>
-        <p>Copyright 2016</p>
-    </footer>
-</div>
-
-</body>
-
-</html>
