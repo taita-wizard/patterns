@@ -6,11 +6,19 @@
       "email": "yury.suhno@gmail.com"
     }
   ],
-  "config":{
+  "config": {
     "vendor-dir": "../vendor",
     "bin-dir": "../bin"
   },
   "require": {
-    "php-amqplib/php-amqplib": "2.6.*"
-  }
+    "php": ">=7.0",
+    "twbs/bootstrap": "v3.3.7",
+    "components/jquery":"3.1.1"
+  },
+  "require-dev": {
+    "php-amqplib/php-amqplib": "2.6.*",
+    "phpunit/phpunit": "^5.6",
+    "jumper423/shelter": "*"
+  },
+  "minimum-stability": "dev"
 }

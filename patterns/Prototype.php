@@ -20,7 +20,6 @@ interface Product
  */
 class Factory
 {
-
     /**
      * @var Product
      */
