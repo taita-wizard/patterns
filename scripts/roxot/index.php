@@ -6,7 +6,7 @@
  * Time: 14:01
  */
 
-require_once "../../../vendor/autoload.php";
+require_once "./vendor/autoload.php";
 use Taita\Roxot\GameParser;
 
 $parser = new GameParser(__DIR__ . "/source/matches/", __DIR__ . "/result/");
